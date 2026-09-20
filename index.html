@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ALMOGHANI LIVE</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#020711;color:#fff;font-family:Arial,Tahoma,sans-serif}
+.app{position:relative;width:100%;max-width:520px;margin:auto;overflow:hidden}.design{display:block;width:100%;height:auto}
+.tap{position:absolute;z-index:4;border:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tap:active{background:rgba(45,125,255,.15);border-radius:16px}
+/* top */
+.menuTap{top:3.3%;left:3%;width:13%;height:6%}.searchTap{top:3.3%;left:17%;width:13%;height:6%}
+/* four category tiles, matching visual order */
+sportTap{top:33.0%;right:5%;width:20%;height:8%}
+.channelTap{top:33.0%;right:28%;width:20%;height:8%}
+.movieTap{top:33.0%;right:52%;width:20%;height:8%}
+.seriesTap{top:33.0%;right:76%;width:19%;height:8%}
+.matchesTap{top:46%;left:4%;width:92%;height:17%}.posterTap{top:65%;left:4%;width:92%;height:20%}
+/* bottom nav */
+.homeTap{bottom:1%;right:1%;width:23%;height:6%}.bottomSearch{bottom:1%;right:26%;width:23%;height:6%}
+.favTap{bottom:1%;right:51%;width:23%;height:6%}.accountTap{bottom:1%;right:76%;width:23%;height:6%}
+.view{position:fixed;inset:0;z-index:20;background:#030a15;display:none;overflow:auto;padding:18px 14px 90px;line-height:1.5}
+.view.open{display:block}.inner{max-width:520px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.back{border:0;background:#126cff;color:#fff;border-radius:12px;padding:11px 15px;font-size:16px}.title{font-size:23px;font-weight:800}
+.card{background:linear-gradient(145deg,#0c1a2e,#07111f);border:1px solid #244873;border-radius:20px;padding:16px;margin:10px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.action{display:block;text-decoration:none;color:#fff;text-align:center;background:#0e2039;border:1px solid #2c5485;border-radius:15px;padding:15px 8px}
+.muted{color:#aabbd2}.red{background:#d91f35;border-color:#ff5669}.input{width:100%;padding:14px;border-radius:13px;border:1px solid #31547f;background:#07101e;color:#fff;font-size:16px}
+.drawerShade{position:fixed;inset:0;background:rgba(0,0,0,.68);z-index:29;display:none}.drawerShade.open{display:block}
+.drawer{position:fixed;top:0;right:-88%;width:86%;max-width:390px;height:100%;z-index:30;background:#06101f;border-left:1px solid #23486f;padding:22px;overflow:auto;transition:.25s}
+.drawer.open{right:0}.close{float:left;border:0;background:#14253c;color:#fff;width:42px;height:42px;border-radius:50%;font-size:22px}
+.logo{font-size:25px;font-weight:900;margin:8px 0 25px}.logo b{color:#1782ff}.menuitem{display:block;text-decoration:none;color:#fff;background:#0b1a2e;border:1px solid #203f66;border-radius:14px;padding:13px;margin:8px 0}
+.social{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.social a{color:#fff;text-decoration:none;text-align:center;padding:12px 5px;border-radius:12px;background:#102440;border:1px solid #2c5382}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<style>
+.free-tv-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.free-tv-btn{border:1px solid rgba(255,255,255,.14);background:#111827;color:#fff;border-radius:15px;padding:13px 9px;font:inherit;cursor:pointer;text-align:center}
+.free-tv-btn:active{transform:scale(.98)}
+#freePlayerWrap{display:none;margin:14px 0;background:#05070c;border-radius:18px;padding:10px}
+#freePlayer{width:100%;aspect-ratio:16/9;background:#000;border-radius:13px}
+#freeNow{font-weight:800;margin:8px 3px 10px}
+.free-status{opacity:.72;font-size:13px;line-height:1.6}
+</style>
+</head><body>
+<main class="app">
+<img class="design" src="almoghani-live-design.png" alt="ALMOGHANI LIVE">
+<button class="tap menuTap" onclick="drawer(true)" aria-label="القائمة"></button>
+<button class="tap searchTap" onclick="show('search')" aria-label="البحث"></button>
+<button class="tap sportTap" onclick="show('sports')" aria-label="رياضة"></button>
+<button class="tap channelTap" onclick="show('channels')" aria-label="قنوات"></button>
+<button class="tap movieTap" onclick="show('movies')" aria-label="أفلام"></button>
+<button class="tap seriesTap" onclick="show('series')" aria-label="مسلسلات"></button>
+<button class="tap matchesTap" onclick="show('matches')" aria-label="مباريات اليوم"></button>
+<button class="tap posterTap" onclick="show('movies')" aria-label="أحدث الأفلام"></button>
+<button class="tap homeTap" onclick="home()" aria-label="الرئيسية"></button>
+<button class="tap bottomSearch" onclick="show('search')" aria-label="بحث"></button>
+<button class="tap favTap" onclick="show('favorites')" aria-label="المفضلة"></button>
+<button class="tap accountTap" onclick="show('account')" aria-label="حسابي"></button>
+</main>
+
+<div id="shade" class="drawerShade" onclick="drawer(false)"></div>
+<aside id="drawer" class="drawer">
+<button class="close" onclick="drawer(false)">×</button>
+<div class="logo">ALMOGHANI <b>LIVE</b></div>
+<a class="menuitem" href="#" onclick="go('matches')">⚽ مباريات اليوم</a>
+<a class="menuitem" href="#" onclick="go('sports')">🏆 القنوات الرياضية</a>
+<a class="menuitem" href="#" onclick="go('channels')">📺 القنوات</a>
+<a class="menuitem" href="#" onclick="go('movies')">🎬 الأفلام</a>
+<a class="menuitem" href="#" onclick="go('series')">🍿 المسلسلات</a>
+<h3>تواصل معنا</h3>
+<div class="social">
+<a href="https://wa.me/966557073007" target="_blank">WhatsApp</a>
+<a href="https://x.com/op430" target="_blank">X</a>
+<a href="https://www.snapchat.com/add/Ls460g" target="_blank">Snapchat</a>
+<a href="https://www.instagram.com/aaaaa287769/" target="_blank">Instagram</a>
+<a href="https://www.tiktok.com/@Almoghani8" target="_blank">TikTok</a>
+<a href="https://www.youtube.com/@Ahmed1508" target="_blank">YouTube</a>
+<a href="https://t.me/AHMED_ALMOGHANI" target="_blank">Telegram</a>
+<a href="mailto:Ahmed@almoghani.net">Email</a>
+</div>
+</aside>
+
+<div id="matches" class="view"><div class="inner"><div class="topbar"><div class="title">⚽ مباريات اليوم</div><button class="back" onclick="hide()">رجوع</button></div>
+<div class="card"><b>مباريات اليوم</b><p class="muted">جاهز لربط Football API وعرض الفرق، الوقت، البطولة، النتيجة والحالة تلقائيًا.</p><button class="back red" onclick="alert('سيظهر زر المشاهدة هنا بعد إضافة مصدر المباراة.')">🔴 شاهد الآن</button></div></div></div>
+
+<div id="sports" class="view"><div class="inner"><div class="topbar"><div class="title">🏆 القنوات الرياضية</div><button class="back" onclick="hide()">رجوع</button></div>
+<div class="card"><b>⚽ ثمانية</b><p class="muted">المشاهدة الرسمية لمنافسات كرة القدم السعودية.</p>
+<a class="action" href="https://app.thmanyah.com/" target="_blank">ثمانية 1 / 2 / 3 — ▶ شاهد الآن</a></div>
+<div class="card"><b>⚽ DAZN</b><p class="muted">رياضات وبث مباشر حسب المحتوى المتاح في منطقتك وحسابك.</p>
+<a class="action" href="https://www.dazn.com/en-SA/home" target="_blank">DAZN — ▶ شاهد الآن</a></div>
+<div class="card"><b>🏈 NFL Network على DAZN</b><p class="muted">تغطية NFL عبر DAZN.</p>
+<a class="action" href="https://www.dazn.com/ar-SA/home/86wy4j1zq7l2vyyq3w6m96fdl/1q5klj0sg3kw111yxzfi4m2ftd" target="_blank">▶ شاهد NFL Network</a></div>
+<div class="card"><b>🟣 beIN SPORTS الإخبارية</b><p class="muted">البث المباشر عبر قناة beIN SPORTS على YouTube.</p>
+<a class="action" href="https://www.youtube.com/live/2lJZPT6OljI?si=lg1KlZJ8CaBhYxxE" target="_blank">🔴 ▶ شاهد beIN SPORTS الإخبارية</a></div>
+<div class="card"><b>🏟️ قناة رياضية — مباشر</b><p class="muted">بث رياضي مباشر عبر YouTube.</p>
+<a class="action" href="https://www.youtube.com/live/7EG_2hOoHWw?si=e6YzDOhLHtY7vBe-" target="_blank">🔴 ▶ شاهد البث الرياضي</a></div>
+<div class="card muted">تفتح المشاهدة من المنصة الرسمية، وقد يلزم تسجيل الدخول حسب المحتوى.</div>
+</div></div>
+
+<div id="channels" class="view"><div class="inner"><div class="topbar"><div class="title">📺 القنوات</div><button class="back" onclick="hide()">رجوع</button></div>
+
+<div class="card"><b>✨ MBC — شاهد</b><div class="grid" style="margin-top:12px">
+<a class="action" href="https://shahid.mbc.net/ar/livestream/MBC1/livechannel-387238" target="_blank">MBC1<br>▶ شاهد</a>
+<a class="action" href="https://shahid.mbc.net/ar/livestream/mbc-action/livechannel-400921" target="_blank">MBC Action<br>▶ شاهد</a>
+<a class="action" href="https://shahid.mbc.net/ar/livestream/mbc-drama/livechannel-387251" target="_blank">MBC Drama<br>▶ شاهد</a>
+<a class="action" href="https://shahid.mbc.net/ar/livestream/MBC-Masr/livechannel-387290" target="_blank">MBC مصر<br>▶ شاهد</a>
+</div></div>
+
+<div class="card"><b>🎬 روتانا</b><p class="muted">سينما السعودية، سينما مصر، كوميدي، كلاسيك، دراما، خليجية، الرسالة وغيرها.</p>
+<a class="action" href="https://www.rotana.net/ar/channels/live" target="_blank">روتانا — ▶ البث الرسمي</a></div>
+
+<div class="card"><b>📰 الأخبار</b><div class="grid" style="margin-top:12px">
+<a class="action" href="https://www.skynewsarabia.com/livestream-%D8%A7%D9%84%D8%A8%D8%AB-%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1" target="_blank">سكاي نيوز عربية<br>▶ مباشر</a>
+<a class="action" href="https://shahid.mbc.net/ar/livestream/Al-Arabiya-Program/livechannel-49923733029294" target="_blank">العربية<br>▶ شاهد</a>
+<a class="action" href="https://www.alhadath.net/live-stream" target="_blank">الحدث 🔴<br>▶ بث مباشر</a>
+<a class="action" href="https://www.youtube.com/live/N8xxOD0nT1Y?si=Fnl7iU7M_2pDqjQu" target="_blank">الجزيرة 2 🔴<br>▶ بث مباشر</a>
+<a class="action" href="https://www.youtube.com/live/h6cB5IUmVF0?si=EjWC04AmGGX7XIbY" target="_blank">قناة سوريا 🇸🇾 🔴<br>▶ بث مباشر</a>
+<a class="action" href="https://www.youtube.com/live/93g513Uth98?si=RlZ9S71adbteQNlo" target="_blank">فرانس 24 العربية 🇫🇷 🔴<br>▶ بث مباشر</a>
+</div></div>
+
+<div class="card"><b>🕌 دينية</b><div class="grid" style="margin-top:12px">
+<a class="action" href="https://shahid.mbc.net/ar/livestream/%D8%A5%D9%82%D8%B1%D8%A3/livechannel-49923697660442" target="_blank">إقرأ<br>▶ شاهد</a>
+<a class="action" href="https://www.rotana.net/ar/channels/live" target="_blank">الرسالة<br>▶ روتانا</a>
+<a class="action" href="https://www.youtube.com/live/eC4LfEVxvKg?si=sBxjwEWaAXuE3ElR" target="_blank">القرآن الكريم 🕋<br>🔴 بث مباشر</a>
+<a class="action" href="https://www.youtube.com/live/Rs7St51oDDc?si=EP972CmtiN9qknt4" target="_blank">قناة السنة النبوية 🕌<br>🔴 بث مباشر</a>
+</div></div>
+
+<a class="action" href="https://www.youtube.com/live/bNyUyrR0PHo?si=XVsOaAUufPdMLyOg" target="_blank">الجزيرة — البث الحي 🔴<br>▶ شاهد الآن</a>
+<a class="action" href="https://www.youtube.com/live/A_f-ilC0rkk?si=pl75e_gsf0EeasQ-" target="_blank">الإخبارية السورية 🇸🇾 🔴<br>▶ شاهد الآن</a>
+
+<div class="card"><b>📡 القنوات المجانية</b><p class="muted">قائمة عامة تتحدث من المصدر.</p>
+<button class="action" style="width:100%;border:0" onclick="show('freechannels');loadFreeTV()">فتح القنوات المجانية ▶</button></div>
+<div class="card muted">جميع الأزرار هنا تفتح مصدر المشاهدة الرسمي للقناة. توفر البث وبعض المحتوى يعتمد على المنطقة أو تسجيل الدخول/الاشتراك.</div>
+</div></div>
+
+<div id="freechannels" class="view"><div class="inner">
+<div class="topbar"><div class="title">📡 قنوات مجانية</div><button class="back" onclick="stopFreeTV();hide()">رجوع</button></div>
+<div class="card">
+<b>قنوات عامة مجانية</b>
+<p class="muted">تُحمّل القائمة العامة تلقائياً، ثم تعرض حتى 30 قناة. اضغط على القناة لتشغيلها داخل ALMOGHANI LIVE.</p>
+<div id="freePlayerWrap"><div id="freeNow">البث المباشر</div><video id="freePlayer" controls playsinline></video></div>
+<div id="freeStatus" class="free-status">جاري تحميل القنوات…</div>
+<div id="freeTvList" class="free-tv-list"></div>
+</div></div></div>
+
+<div id="movies" class="view"><div class="inner">
+<div class="topbar"><div class="title">🎬 الأفلام</div><button class="back" onclick="hide()">رجوع</button></div>
+<div class="card"><b>🎞️ فيلم 1</b><p class="muted">مشاهدة عبر YouTube</p>
+<a class="action" href="https://youtu.be/b00cRV-rWDQ?si=oDY88DcGU_VSVEF1" target="_blank">▶ شاهد الفيلم</a></div>
+<div class="card"><b>🎞️ فيلم 2</b><p class="muted">مشاهدة عبر YouTube</p>
+<a class="action" href="https://youtu.be/MeV6b9hHdm4?si=YM--0Nps_4Y-qAXH" target="_blank">▶ شاهد الفيلم</a></div>
+<div class="card"><b>🎞️ فيلم 3</b><p class="muted">مشاهدة عبر YouTube</p>
+<a class="action" href="https://youtu.be/_nQJ8B5NtA8?si=LxWyLYAzPZx6llg1" target="_blank">▶ شاهد الفيلم</a></div>
+<div class="card"><b>🎞️ فيلم 4</b><p class="muted">مشاهدة عبر YouTube</p>
+<a class="action" href="https://youtu.be/iFmbKYrEaBo?si=EsU6JfRFDncb4ICD" target="_blank">▶ شاهد الفيلم</a></div>
+</div></div>
+
+<div id="series" class="view"><div class="inner"><div class="topbar"><div class="title">🍿 المسلسلات</div><button class="back" onclick="hide()">رجوع</button></div><div class="card">قسم المسلسلات جاهز لإضافة المحتوى.</div></div></div>
+<div id="search" class="view"><div class="inner"><div class="topbar"><div class="title">🔎 البحث</div><button class="back" onclick="hide()">رجوع</button></div><input class="input" placeholder="ابحث في ALMOGHANI LIVE"></div></div>
+<div id="favorites" class="view"><div class="inner"><div class="topbar"><div class="title">⭐ المفضلة</div><button class="back" onclick="hide()">رجوع</button></div><div class="card">العناصر التي تحفظها ستظهر هنا.</div></div></div>
+<div id="account" class="view"><div class="inner"><div class="topbar"><div class="title">👤 حسابي</div><button class="back" onclick="hide()">رجوع</button></div><div class="grid">
+<a class="action" href="https://wa.me/966557073007" target="_blank">WhatsApp</a><a class="action" href="https://x.com/op430" target="_blank">X</a>
+<a class="action" href="https://www.instagram.com/aaaaa287769/" target="_blank">Instagram</a><a class="action" href="https://www.tiktok.com/@Almoghani8" target="_blank">TikTok</a>
+<a class="action" href="https://www.snapchat.com/add/Ls460g" target="_blank">Snapchat</a><a class="action" href="https://www.youtube.com/@Ahmed1508" target="_blank">YouTube</a>
+<a class="action" href="https://t.me/AHMED_ALMOGHANI" target="_blank">Telegram</a><a class="action" href="mailto:Ahmed@almoghani.net">Email</a>
+</div></div></div>
+<script>
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('open'));document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
+function hide(){document.querySelectorAll('.view').forEach(v=>v.classList.remove('open'));document.body.style.overflow='';}
+function home(){hide();drawer(false);window.scrollTo({top:0,behavior:'smooth'})}
+function drawer(open){document.getElementById('drawer').classList.toggle('open',open);document.getElementById('shade').classList.toggle('open',open)}
+function go(id){drawer(false);show(id);return false}
+</script>
+
+<script>
+let freeHls=null;
+async function loadFreeTV(){
+  const list=document.getElementById('freeTvList');
+  const status=document.getElementById('freeStatus');
+  if(!list || list.dataset.loaded==="1") return;
+  status.textContent='جاري تحميل القنوات العامة…';
+  try{
+    const r=await fetch('https://iptv-org.github.io/iptv/countries/sa.m3u');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const txt=await r.text();
+    const lines=txt.split(/\r?\n/);
+    const channels=[];
+    for(let i=0;i<lines.length;i++){
+      if(lines[i].startsWith('#EXTINF:')){
+        const name=(lines[i].split(',').pop()||'قناة').trim();
+        let j=i+1;
+        while(j<lines.length && (!lines[j] || lines[j].startsWith('#'))) j++;
+        if(j<lines.length && /^https?:\/\//.test(lines[j])){
+          channels.push({name,url:lines[j].trim()});
+        }
+      }
+    }
+    const unique=[]; const seen=new Set();
+    for(const c of channels){
+      const k=c.name.toLowerCase();
+      if(!seen.has(k)){seen.add(k);unique.push(c);}
+      if(unique.length>=30) break;
+    }
+    list.innerHTML='';
+    unique.forEach(c=>{
+      const b=document.createElement('button');
+      b.className='free-tv-btn';
+      b.textContent='▶ '+c.name;
+      b.onclick=()=>playFreeTV(c.name,c.url);
+      list.appendChild(b);
+    });
+    list.dataset.loaded="1";
+    status.textContent=unique.length ? `تم تحميل ${unique.length} قناة عامة. قد تتغير بعض الروابط من المصدر.` : 'لا توجد قنوات متاحة حالياً.';
+  }catch(e){
+    status.textContent='تعذر تحميل القائمة الآن. حاول مرة أخرى لاحقاً.';
+  }
+}
+function playFreeTV(name,url){
+  const video=document.getElementById('freePlayer');
+  document.getElementById('freePlayerWrap').style.display='block';
+  document.getElementById('freeNow').textContent='🔴 '+name;
+  if(freeHls){freeHls.destroy();freeHls=null;}
+  video.pause(); video.removeAttribute('src'); video.load();
+  if(video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src=url; video.play().catch(()=>{});
+  }else if(window.Hls && Hls.isSupported()){
+    freeHls=new Hls(); freeHls.loadSource(url); freeHls.attachMedia(video);
+    freeHls.on(Hls.Events.MANIFEST_PARSED,()=>video.play().catch(()=>{}));
+  }else{
+    window.open(url,'_blank');
+  }
+  document.getElementById('freePlayerWrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function stopFreeTV(){
+  const v=document.getElementById('freePlayer');
+  if(v){v.pause();v.removeAttribute('src');v.load();}
+  if(freeHls){freeHls.destroy();freeHls=null;}
+}
+</script>
+</body></html>
